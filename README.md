@@ -1,8 +1,9 @@
 # env setting
 
 ```
-yarn add styled-components
-npm install @apollo/react-hooks apollo-client graphql apollo-boost --save
+npm install styled-components --save
+npm install @apollo/react-hooks apollo-client graphql apollo-boost apollo-cache-inmemory --save
+yarn add apollo-cache-persist
 ```
 
 # Prismagram iOS & Android App
