@@ -195,5 +195,97 @@ export default options;
  
  # 10.6 AuthContext part One (10:56)
  - Context : 함수들을 다른곳에서 사용한다라?!
+ - Context 사용법 OneNote정리하고감.
+ 
+ ```js
+  사용목적 : 언제 어디서든 특정 객체를 사용하고 싶을때 , 
+만약에 너가만든 todoElement 를 CRUD 하는 객체를 만들었는데, 이 하나의 인스턴스를 이곳 저곳에서 사용하고 싶다면 힘들겠지.
+부모 -> 자식 컴포넌트로 변수가흐르니까
+
+context 를 사용하면 Provider와 함께 , 언제 어디서든 호출 가능!!
+
+
+#1.context 정의   로그인 하는 기능을 어디서든 사용하고 싶다면!
+- export const AuthContext = createContext(); -> useContext 로 사용 이곳저곳에서 사용
+- AuthProvider -> 프로바이더 제공 1번만
+
+---
+import React, { createContext, useContext, useState } from "react";
+import { AsyncStorage } from "react-native";
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const logUserIn = async () => {
+        try {
+            await AsyncStorage.setItem("isLoggedIn", "true");
+            setIsLoggedIn(true);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    const logUserOut = async () => {
+        try {
+            await AsyncStorage.setItem("isLoggedIn", "false");
+            setIsLoggedIn(false);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    return (
+        <AuthContext.Provider value={{ isLoggedIn, logUserIn, logUserOut }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+export const useIsLoggedIn = () => {
+    const { isLoggedIn } = useContext(AuthContext);
+    return isLoggedIn;
+};
+export const useLogIn = () => {
+    const { logUserIn } = useContext(AuthContext);
+    return logUserIn;
+};
+export const useLogOut = () => {
+    const { logUserOut } = useContext(AuthContext);
+    return logUserOut;
+};
+
+#2. Provider 제공
+
+import { AuthProvider } from "./AuthContext";
+
+
+          <AuthProvider>
+            <View style={styles.container}>
+              {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+              <NavigationContainer
+                ref={containerRef}
+                initialState={initialNavigationState}
+              >
+                <Stack.Navigator initialRouteName="Auth">
+                  <Stack.Screen name="Root" component={BottomTabNavigator} />
+                  <Stack.Screen name="Auth" component={Login} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </View>
+          </AuthProvider>
+
+
+#3 사용하기 (사실 위에서 이미 사용함 )
+---
+
+import { useIsLoggedIn } from "../AuthContext";
+`;
+export default function HomeScreen() {
+
+  const isLoggedIn = useIsLoggedIn();
+  console.log(isLoggedIn);
+}
+
+
+
+ ```
  
  # 10.7 AuthContext part Two (8:00)

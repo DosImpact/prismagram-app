@@ -4,6 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  Text,
   AsyncStorage
 } from "react-native";
 import { SplashScreen } from "expo";
@@ -24,6 +25,13 @@ import apolloClientOptions from "./apollo";
 
 import { ThemeProvider } from "styled-components";
 import theme from "./styles/theme"
+
+import { AuthProvider } from "./AuthContext";
+
+const Login = () => {
+
+  return <View><Text>Login</Text></View>
+}
 
 const Stack = createStackNavigator();
 
@@ -73,17 +81,20 @@ export default function App(props) {
     return client ? (
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-          <View style={styles.container}>
-            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-            <NavigationContainer
-              ref={containerRef}
-              initialState={initialNavigationState}
-            >
-              <Stack.Navigator>
-                <Stack.Screen name="Root" component={BottomTabNavigator} />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </View>
+          <AuthProvider>
+            <View style={styles.container}>
+              {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+              <NavigationContainer
+                ref={containerRef}
+                initialState={initialNavigationState}
+              >
+                <Stack.Navigator initialRouteName="Auth">
+                  <Stack.Screen name="Root" component={BottomTabNavigator} />
+                  <Stack.Screen name="Auth" component={Login} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </View>
+          </AuthProvider>
         </ThemeProvider>
       </ApolloProvider>
     ) : <SplashScreen />;

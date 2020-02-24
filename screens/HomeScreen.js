@@ -7,6 +7,8 @@ import { MonoText } from '../components/StyledText';
 
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks"
+
+import { useIsLoggedIn } from "../AuthContext";
 const TEST = gql`
 {
   allUsers{
@@ -17,7 +19,9 @@ const TEST = gql`
 `;
 
 export default function HomeScreen() {
-  const { loading, data, error } = useQuery(TEST)
+  const { loading, data, error } = useQuery(TEST);
+  const isLoggedIn = useIsLoggedIn();
+  console.log(isLoggedIn);
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
