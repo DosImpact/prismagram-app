@@ -1,5 +1,11 @@
+import { HttpLink } from "apollo-link-http"
+
+const link = new HttpLink({
+  uri: "https://0fh7c.sse.codesandbox.io/"
+});
+
 const options = {
-  uri: "http://localhost:4000/"
+  link
 };
 
 export default options;

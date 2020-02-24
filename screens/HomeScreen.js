@@ -5,10 +5,24 @@ import * as WebBrowser from 'expo-web-browser';
 
 import { MonoText } from '../components/StyledText';
 
+import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks"
+const TEST = gql`
+{	
+  bai
+  hello
+}
+`;
+
 export default function HomeScreen() {
+  const { loading, data, error } = useQuery(TEST)
+  console.log(loading, data, error);
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <View>
+          <Text>{!loading && JSON.stringify(data)}</Text>
+        </View>
         <View style={styles.welcomeContainer}>
           <Image
             source={
@@ -41,13 +55,6 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-        <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>
-        </View>
-      </View>
     </View>
   );
 }

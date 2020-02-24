@@ -51,10 +51,8 @@ export default function App(props) {
           cache,
           ...apolloClientOptions
         });
-        console.log(client);
         setClient(client);
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
         console.warn(e);
       } finally {
         setLoadingComplete(true);
@@ -68,24 +66,8 @@ export default function App(props) {
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {
-    if (client) {
-      return (
-        <ApolloProvider client={client}>
-          <View style={styles.container}>
-            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-            <NavigationContainer
-              ref={containerRef}
-              initialState={initialNavigationState}
-            >
-              <Stack.Navigator>
-                <Stack.Screen name="Root" component={BottomTabNavigator} />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </View>
-        </ApolloProvider>
-      );
-    } else {
-      return (
+    return client ? (
+      <ApolloProvider client={client}>
         <View style={styles.container}>
           {Platform.OS === "ios" && <StatusBar barStyle="default" />}
           <NavigationContainer
@@ -97,8 +79,8 @@ export default function App(props) {
             </Stack.Navigator>
           </NavigationContainer>
         </View>
-      );
-    }
+      </ApolloProvider>
+    ) : <SplashScreen />;
   }
 }
 
