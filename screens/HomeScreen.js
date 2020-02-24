@@ -18,7 +18,6 @@ const TEST = gql`
 
 export default function HomeScreen() {
   const { loading, data, error } = useQuery(TEST)
-  console.log(loading, data, error);
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>

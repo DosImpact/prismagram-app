@@ -77,6 +77,116 @@ import { persistCache } from "apollo-cache-persist";
 접속을 해야 localhost에 접속이 가능하다.
  ```
 
+ ```
+ import React, { useState } from "react";
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+  AsyncStorage
+} from "react-native";
+import { SplashScreen } from "expo";
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import BottomTabNavigator from "./navigation/BottomTabNavigator";
+import useLinking from "./navigation/useLinking";
+import { Asset } from "expo-asset";
+
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { persistCache } from "apollo-cache-persist";
+import { ApolloClient } from "apollo-client";
+import { ApolloProvider } from "@apollo/react-hooks";
+import apolloClientOptions from "./apollo";
+
+const Stack = createStackNavigator();
+
+export default function App(props) {
+  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
+  const [initialNavigationState, setInitialNavigationState] = React.useState();
+  const containerRef = React.useRef();
+  const { getInitialState } = useLinking(containerRef);
+  const [client, setClient] = useState(null);
+  // Load any resources or data that we need prior to rendering the app
+  React.useEffect(() => {
+    async function loadResourcesAndDataAsync() {
+      try {
+        SplashScreen.preventAutoHide();
+
+        setInitialNavigationState(await getInitialState());
+        await Asset.loadAsync([require("./assets/images/logo.png")]);
+        await Font.loadAsync({
+          ...Ionicons.font,
+          "space-mono": require("./assets/fonts/SpaceMono-Regular.ttf")
+        });
+        const cache = new InMemoryCache();
+        await persistCache({
+          cache,
+          storage: AsyncStorage
+        });
+        const client = new ApolloClient({
+          cache,
+          ...apolloClientOptions
+        });
+        setClient(client);
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setLoadingComplete(true);
+        SplashScreen.hide();
+      }
+    }
+    console.log("App load init setting...");
+    loadResourcesAndDataAsync();
+  }, []);
+
+  if (!isLoadingComplete && !props.skipLoadingScreen) {
+    return null;
+  } else {
+    return client ? (
+      <ApolloProvider client={client}>
+        <View style={styles.container}>
+          {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+          <NavigationContainer
+            ref={containerRef}
+            initialState={initialNavigationState}
+          >
+            <Stack.Navigator>
+              <Stack.Screen name="Root" component={BottomTabNavigator} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </View>
+      </ApolloProvider>
+    ) : <SplashScreen />;
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  }
+});
+
+
+ ```
+```
+import { HttpLink } from "apollo-link-http"
+
+const link = new HttpLink({
+  uri: "http://10.0.2.2:4000"
+});
+
+const options = {
+  link,
+};
+
+export default options;
+
+```
  # 10.4 isLoggedIn part One (10:22)
 
  - theme 제공
@@ -84,5 +194,6 @@ import { persistCache } from "apollo-cache-persist";
  # 10.5 isLoggedIn part Two (7:36)
  
  # 10.6 AuthContext part One (10:56)
+ - Context : 함수들을 다른곳에서 사용한다라?!
  
  # 10.7 AuthContext part Two (8:00)
