@@ -8,9 +8,11 @@ import { MonoText } from '../components/StyledText';
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks"
 const TEST = gql`
-{	
-  bai
-  hello
+{
+  allUsers{
+    name
+    id
+  }
 }
 `;
 

@@ -51,11 +51,35 @@ import { persistCache } from "apollo-cache-persist";
 
  # 10.3 Recap (4:37)
  
- - 애러 핸들링
- ```
+ - 애러 핸들링 | 공식문서 상에는 다음처럼 바뀌어서 수정함.! | AVD 상에서는 localhost 접근방법이 좀 다름 
+
  apollo-link-http
+
+ ```js
+    import { HttpLink } from "apollo-link-http"
+
+    const link = new HttpLink({
+    uri: "https://0fh7c.sse.codesandbox.io/"
+    });
+
+    const options = {
+    link
+    };
+
+    export default options;
+
  ```
+ ```
+ 보통 PC에서 웹서버를 동작하게 하면, 웹 브라우져에서 "http://localhost:8080"로 접속 한다.
+
+하지만 안드로이드 에뮬레이터에서는 "http://10.0.2.2:4000"로
+
+접속을 해야 localhost에 접속이 가능하다.
+ ```
+
  # 10.4 isLoggedIn part One (10:22)
+
+ - theme 제공
  
  # 10.5 isLoggedIn part Two (7:36)
  
