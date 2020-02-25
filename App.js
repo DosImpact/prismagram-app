@@ -5,7 +5,8 @@ import {
   StyleSheet,
   View,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  TouchableOpacity
 } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
@@ -24,14 +25,31 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import apolloClientOptions from "./apollo";
 
 import { ThemeProvider } from "styled-components";
-import theme from "./styles/theme"
+import theme from "./styles/theme";
 
 import { AuthProvider } from "./AuthContext";
 
-const Login = () => {
+import { useIsLoggedIn, useLogIn, useLogOut } from "./AuthContext";
 
-  return <View><Text>Login</Text></View>
-}
+//TODO MOVE to Screen folder
+const Login = () => {
+  const isLoggedIn = useIsLoggedIn();
+  const logIn = useLogIn();
+  const logOut = useLogOut();
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      {isLoggedIn ? (
+        <TouchableOpacity onPress={logOut}>
+          <Text>Log Out</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={logIn}>
+          <Text>Log in</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+};
 
 const Stack = createStackNavigator();
 
@@ -41,7 +59,7 @@ export default function App(props) {
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
   const [client, setClient] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(null);//null => 체크안함 | true 체크하고 로긴함 | false 체크하고 로긴안함
+  const [isLoggedIn, setIsLoggedIn] = useState(null); //null => 체크안함 | true 체크하고 로긴함 | false 체크하고 로긴안함
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
     async function loadResourcesAndDataAsync() {
@@ -63,6 +81,12 @@ export default function App(props) {
           cache,
           ...apolloClientOptions
         });
+        const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+        if (!isLoggedIn || isLoggedIn === "false") {
+          setIsLoggedIn(false);
+        } else {
+          setIsLoggedIn(true);
+        }
         setClient(client);
       } catch (e) {
         console.warn(e);
@@ -71,7 +95,6 @@ export default function App(props) {
         SplashScreen.hide();
       }
     }
-    console.log("App load init setting...");
     loadResourcesAndDataAsync();
   }, []);
 
@@ -81,7 +104,7 @@ export default function App(props) {
     return client ? (
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-          <AuthProvider>
+          <AuthProvider isLoggedIn={isLoggedIn}>
             <View style={styles.container}>
               {Platform.OS === "ios" && <StatusBar barStyle="default" />}
               <NavigationContainer
@@ -97,7 +120,9 @@ export default function App(props) {
           </AuthProvider>
         </ThemeProvider>
       </ApolloProvider>
-    ) : <SplashScreen />;
+    ) : (
+      <SplashScreen />
+    );
   }
 }
 
