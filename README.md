@@ -346,3 +346,29 @@ pass
 ```
 export default ({ navigation, route }) => {
 ```
+
+### 네비게이션 파트 종료
+
+# 12 App: Auth
+
+# 12.0 AuthHome (12:18)
+
+# 12.1 Auth Components part One (12:20)
+
+# 12.2 Auth Components part Two (8:11)
+
+# 12.3 Login part One (10:46)
+
+# 12.4 Login part Two (10:20)
+
+# 12.5 Login part Three (4:00)
+
+# 12.6 Confirm (12:42)
+
+# 12.7 Singup (14:26)
+
+# 12.8 Facebook Login part One (11:33)
+
+# 12.9 Facebook Login part Two (9:28)
+
+# 12.10 Google Login (11:24)
