@@ -7,6 +7,7 @@ import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 
 import useInput from "../../hooks/useInput";
+import { Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
 
 const View = styled.View`
   flex: 1;
@@ -21,24 +22,32 @@ const Login = () => {
   const logIn = useLogIn();
   const logOut = useLogOut();
   const emailInput = useInput("");
+
+  const handleLogin = () => {
+    const { value } = emailInput;
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (value === "") {
+      Alert.alert("Email can't be empty");
+    } else if (!emailRegex.test(value)) {
+      return Alert.alert("invalid Email");
+    } else {
+    }
+  };
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <AuthInput
-        {...emailInput}
-        placeholder="Email"
-        keyboardType="email-address"
-      />
-      <AuthButton onPress={() => null} text="Log In" />
-      {/* {isLoggedIn ? (
-        <TouchableOpacity onPress={logOut}>
-          <Text>Log Out</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity onPress={logIn}>
-          <Text>Log in</Text>
-        </TouchableOpacity>
-      )} */}
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <AuthInput
+          {...emailInput}
+          placeholder="Email"
+          keyboardType="email-address"
+          returnKeyType="send"
+          onEndEditing={handleLogin}
+          autoCorrect={false}
+        />
+        <AuthButton onPress={handleLogin} text="Log In" />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

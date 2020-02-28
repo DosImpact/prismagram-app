@@ -357,6 +357,38 @@ export default ({ navigation, route }) => {
 
 # 12.2 Auth Components part Two (8:11)
 
+- input에 대한 올바른 입력검사는 정규식을 이용한다.
+
+```js
+const handleLogin = () => {
+  const { value } = emailInput;
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (value === "") {
+    Alert.alert("Email can't be empty");
+  } else if (!emailRegex.test(value)) {
+    return Alert.alert("invalid Email");
+  } else {
+  }
+};
+```
+
+- 바깥화면을 누르면 키보드 없애기
+
+```js
+import { TouchableWithoutFeedback, Keyboard } from "react-native";
+
+<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <AuthInput
+      {...emailInput}
+      placeholder="Email"
+      keyboardType="email-address"
+    />
+    <AuthButton onPress={handleLogin} text="Log In" />
+  </View>
+</TouchableWithoutFeedback>;
+```
+
 # 12.3 Login part One (10:46)
 
 # 12.4 Login part Two (10:20)
