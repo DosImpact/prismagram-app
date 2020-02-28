@@ -35,6 +35,8 @@ import theme from "./styles/theme";
 import { AuthProvider } from "./AuthContext";
 import { useIsLoggedIn, useLogIn, useLogOut } from "./AuthContext";
 
+import AuthNavigation from "./navigation/AuthNavigation";
+
 import NavContoller from "./navigation/NavContoller";
 
 //TODO MOVE to Screen folder
@@ -120,11 +122,11 @@ export default function App(props) {
                 initialState={initialNavigationState}
               >
                 <Stack.Navigator
-                  initialRouteName={true ? "Root" : "Auth"}
+                  initialRouteName={false ? "Root" : "Auth"}
                   headerMode={"none"}
                 >
                   <Stack.Screen name="Root" component={MainNavigation} />
-                  <Stack.Screen name="Auth" component={Login} />
+                  <Stack.Screen name="Auth" component={AuthNavigation} />
                 </Stack.Navigator>
               </NavigationContainer>
             </View>

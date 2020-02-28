@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useIsLoggedIn, useLogIn, useLogOut } from "../../AuthContext";
 
 const View = styled.View`
   flex: 1;
@@ -9,10 +11,23 @@ const View = styled.View`
 
 const Text = styled.Text``;
 
-export default () => {
+const Login = () => {
+  const isLoggedIn = useIsLoggedIn();
+  const logIn = useLogIn();
+  const logOut = useLogOut();
   return (
-    <View>
-      <Text>Login</Text>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      {isLoggedIn ? (
+        <TouchableOpacity onPress={logOut}>
+          <Text>Log Out</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={logIn}>
+          <Text>Log in</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
+
+export default Login;
