@@ -1,15 +1,27 @@
-import React from "react";
-import { createStackNavigator } from "@react-navigation/";
-import BottomTabNavigator from "./BottomTabNavigator";
+import * as React from "react";
+import { Text, View } from "react-native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 
+import { SelectPhoto, TakePhoto, UploadPhoto } from "../screens/Photo/index";
+
+const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
-const MainNavigation = () => {
+const PhotoTabs = () => {
   return (
-    <Stack.Navigator initialRouteName="TabNavigation" headerMode={"none"}>
-      <Stack.Screen name="TabNavigation" component={BottomTabNavigator} />
-    </Stack.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen name="SelectPhoto" component={SelectPhoto} />
+      <Tab.Screen name="TakePhoto" component={TakePhoto} />
+    </Tab.Navigator>
   );
 };
 
-export default MainNavigation;
+export default function App() {
+  return (
+    <Stack.Navigator initialRouteName={"PhotoTabs"}>
+      <Stack.Screen name="PhotoTabs" component={PhotoTabs} />
+      <Stack.Screen name="UploadPhoto" component={UploadPhoto} />
+    </Stack.Navigator>
+  );
+}

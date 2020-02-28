@@ -11,6 +11,6 @@ const Text = styled.Text``;
 
 export default () => (
   <View>
-    <Text>TakePhoto.js</Text>
+    <Text>Seletect Photo.js</Text>
   </View>
 );

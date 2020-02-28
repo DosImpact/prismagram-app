@@ -332,7 +332,8 @@ pass
 
 # 11.3 Photo Navigation (12:31)
 
-- npm install @react-navigation/material-top-tabs react-native-tab-view
+- yarn add @react-navigation/material-top-tabs react-native-tab-view
+- yarn add react-native-reanimated
 
 # 11.4 Messages Navigation part One (10:18)
 

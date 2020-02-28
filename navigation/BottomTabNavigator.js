@@ -6,7 +6,13 @@ import HomeScreen from "../screens/HomeScreen";
 import LinksScreen from "../screens/LinksScreen";
 import TestScreen from "../screens/TestScreen";
 
-import { Home, Notifications, Profile, Search } from "../screens/Main/index";
+import {
+  Home,
+  Notifications,
+  Profile,
+  Search,
+  Add
+} from "../screens/Main/index";
 import { View } from "react-native";
 
 const BottomTab = createBottomTabNavigator();
@@ -43,12 +49,19 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name="Add"
-        component={View}
+        component={Add}
         options={{
           title: "Add",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name="md-code-working" />
           )
+        }}
+        listeners={{
+          tabPress: e => {
+            // Prevent default action
+            e.preventDefault();
+            console.log("is work>?!");
+          }
         }}
       />
       <BottomTab.Screen
