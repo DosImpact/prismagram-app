@@ -8,15 +8,18 @@ import {
   AsyncStorage,
   TouchableOpacity
 } from "react-native";
+
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { Asset } from "expo-asset";
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator, HeaderTitle } from "@react-navigation/stack";
+
+import MainNavigation from "./navigation/MainNavigation";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import useLinking from "./navigation/useLinking";
-import { Asset } from "expo-asset";
 
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { persistCache } from "apollo-cache-persist";
@@ -27,9 +30,12 @@ import apolloClientOptions from "./apollo";
 import { ThemeProvider } from "styled-components";
 import theme from "./styles/theme";
 
-import { AuthProvider } from "./AuthContext";
+// Context!!
 
+import { AuthProvider } from "./AuthContext";
 import { useIsLoggedIn, useLogIn, useLogOut } from "./AuthContext";
+
+import NavContoller from "./navigation/NavContoller";
 
 //TODO MOVE to Screen folder
 const Login = () => {
@@ -55,9 +61,11 @@ const Stack = createStackNavigator();
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
+
   const [initialNavigationState, setInitialNavigationState] = React.useState();
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
+
   const [client, setClient] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null); //null => 체크안함 | true 체크하고 로긴함 | false 체크하고 로긴안함
   // Load any resources or data that we need prior to rendering the app
@@ -111,8 +119,11 @@ export default function App(props) {
                 ref={containerRef}
                 initialState={initialNavigationState}
               >
-                <Stack.Navigator initialRouteName="Auth">
-                  <Stack.Screen name="Root" component={BottomTabNavigator} />
+                <Stack.Navigator
+                  initialRouteName={true ? "Root" : "Auth"}
+                  headerMode={"none"}
+                >
+                  <Stack.Screen name="Root" component={MainNavigation} />
                   <Stack.Screen name="Auth" component={Login} />
                 </Stack.Navigator>
               </NavigationContainer>

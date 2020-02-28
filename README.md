@@ -295,3 +295,47 @@ export default function HomeScreen() {
 
 - 로그인 로직
 - 1.  앱로딩 (그동안 스플레쉬를 보여준다.) 2. 로그인 여부 살피기 ( 그동안 빈화면? ) 3. 로그인 결과
+
+# 11.0 Introduction To Navigation (10:51)
+
+- 3가지 네비게이션이 있다. draw, Tab(bottom,side...), stack
+- stack 네비게이션은 대기하고 있다가 언제든 호출 가능
+
+```
+stack
+ - bottomTab
+    -
+```
+
+# 11.1 AuthNavigation (13:06)
+
+pass
+
+# 11.2 Tabs Navigation (9:17)
+
+- context 에서 login 되었다면 바텀탭 네비게이션으로 | 아니라면 로그인 Auth Nav로
+
+- fake Nav
+
+```js
+<BottomTab.Screen
+  name="Add"
+  component={View}
+  options={{
+    title: "Add",
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon focused={focused} name="md-code-working" />
+    )
+  }}
+/>
+```
+
+# 11.3 Photo Navigation (12:31)
+
+- npm install @react-navigation/material-top-tabs react-native-tab-view
+
+# 11.4 Messages Navigation part One (10:18)
+
+# 11.5 Message Navigation part Two (6:16)
+
+# 11.6 Navigation Conclusions (2:23)
