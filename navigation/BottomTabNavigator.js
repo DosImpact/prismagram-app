@@ -2,9 +2,6 @@ import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import TabBarIcon from "../components/TabBarIcon";
-import HomeScreen from "../screens/HomeScreen";
-import LinksScreen from "../screens/LinksScreen";
-import TestScreen from "../screens/TestScreen";
 
 import {
   Home,
@@ -13,17 +10,26 @@ import {
   Search,
   Add
 } from "../screens/Main/index";
-import { View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Text } from "react-native";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
 export default function BottomTabNavigator({ navigation, route }) {
-  //console.log(navigation, route);
+  console.log(navigation, route);
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+  navigation.setOptions({
+    headerTitle: getHeaderTitle(route),
+    headerTitleAlign: "center",
+    headerRight: () => (
+      <TouchableOpacity>
+        <Text>HELLO</Text>
+      </TouchableOpacity>
+    )
+  });
 
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
@@ -94,10 +100,14 @@ function getHeaderTitle(route) {
 
   switch (routeName) {
     case "Home":
-      return "How to get started";
-    case "Links":
-      return "Links to learn more";
-    case "Test":
-      return "TEST PAGE";
+      return "HOME";
+    case "Notifications":
+      return "NOTICE";
+    case "Add":
+      return "ADD PHOTH";
+    case "Profile":
+      return "PROFILE";
+    case "Search":
+      return "SEARCH";
   }
 }
