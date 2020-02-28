@@ -9,10 +9,8 @@ const View = styled.View`
 
 const Text = styled.Text``;
 
-export default ({ navigation, route }) => {
-  return (
-    <View>
-      <Text>Home</Text>
-    </View>
-  );
-};
+export default () => (
+  <View>
+    <Text>Message.js</Text>
+  </View>
+);

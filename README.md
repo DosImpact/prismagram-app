@@ -340,3 +340,9 @@ pass
 # 11.5 Message Navigation part Two (6:16)
 
 # 11.6 Navigation Conclusions (2:23)
+
+- 바로 전의 navigation만 참조가 가능하다.!
+
+```
+export default ({ navigation, route }) => {
+```

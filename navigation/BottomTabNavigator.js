@@ -12,12 +12,13 @@ import {
 } from "../screens/Main/index";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Text } from "react-native";
+import HeaderButton from "../components/HeaderButton";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
 export default function BottomTabNavigator({ navigation, route }) {
-  console.log(navigation, route);
+  //console.log(navigation, route);
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
@@ -25,8 +26,12 @@ export default function BottomTabNavigator({ navigation, route }) {
     headerTitle: getHeaderTitle(route),
     headerTitleAlign: "center",
     headerRight: () => (
-      <TouchableOpacity>
-        <Text>HELLO</Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("MessageNavigation");
+        }}
+      >
+        <Text>Mesg</Text>
       </TouchableOpacity>
     )
   });
