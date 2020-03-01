@@ -9,12 +9,20 @@ import { Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useMutation } from "@apollo/react-hooks";
 import { CREATE_ACCOUNT } from "./AuthQuery";
 
+import * as Facebook from "expo-facebook";
+
 const View = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
 `;
-
+const FBContainer = styled.View`
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top-width: 1px;
+  border-color: ${props => props.theme.lightGreyColor};
+  border-style: solid;
+`;
 const Text = styled.Text``;
 
 const Login = ({ navigation }) => {
@@ -65,6 +73,33 @@ const Login = ({ navigation }) => {
     }
   };
 
+  const fbLogin = async () => {
+    try {
+      await Facebook.initializeAsync("230353268007145");
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile", "email"]
+      });
+      if (type === "success") {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,last_name,first_name,email`
+        );
+        //Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+        const { email, first_name, last_name } = await response.json();
+        emailInput.setValue(email);
+        firstNameInput.setValue(first_name);
+        lastNameInput.setValue(last_name);
+        const [name] = email.split("@");
+        nameInput.setValue(name);
+        setLoading(false);
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -93,6 +128,14 @@ const Login = ({ navigation }) => {
           autoCorrect={false}
         />
         <AuthButton onPress={handleSignUp} text="Sign Up" loading={loading} />
+        <FBContainer>
+          <AuthButton
+            bgColor={"#2D4DA7"}
+            loading={false}
+            onPress={fbLogin}
+            text="Connect Facebook"
+          />
+        </FBContainer>
       </View>
     </TouchableWithoutFeedback>
   );

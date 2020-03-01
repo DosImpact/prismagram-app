@@ -401,6 +401,50 @@ import { TouchableWithoutFeedback, Keyboard } from "react-native";
 
 # 12.8 Facebook Login part One (11:33)
 
+- 페이스북 로그인은 expo 덕분에 매우매우 쉽다.
+- 실제 어플리케이션에 적용하려면 iOS,Android 는 추가적인 작업 필요
+
+### 페이스북 connect
+
+- 페이스북 로그인 API를 가져와서, user의 엑세스토큰을 발급
+- 엑세스 토큰을 이용해서 사용자의 프로필 정보(name,fistname,lastname,email 등의 정보를 입력받는다. )
+- 그리고 기존의 JWT 방식대로 로그인 할거임 form을 자동으로 채워
+- 그리고 내 서버로 createAccount 함.
+
+* expo 문서
+  [https://docs.expo.io/versions/latest/sdk/facebook/](https://docs.expo.io/versions/latest/sdk/facebook/)
+
+-
+
+```js
+//설치 및 입포트
+expo install expo-facebook
+
+import * as Facebook from "expo-facebook";
+```
+
+```js
+const fbLogin = async () => {
+  try {
+    await Facebook.initializeAsync("230353268007145");
+    const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+      permissions: ["public_profile", "email"]
+    });
+    if (type === "success") {
+      // Get the user's name using Facebook's Graph API
+      const response = await fetch(
+        `https://graph.facebook.com/me?access_token=${token}`
+      );
+      Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+    } else {
+      // type === 'cancel'
+    }
+  } catch ({ message }) {
+    alert(`Facebook Login Error: ${message}`);
+  }
+};
+```
+
 # 12.9 Facebook Login part Two (9:28)
 
 # 12.10 Google Login (11:24)
