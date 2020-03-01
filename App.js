@@ -43,6 +43,9 @@ import AuthNavigation from "./navigation/AuthNavigation";
 
 import NavContoller from "./navigation/NavContoller";
 
+//Dev
+import DEVScreen from "./screens/DEVScreen";
+
 //TODO MOVE to Screen folder
 const Login = () => {
   const isLoggedIn = useIsLoggedIn();
@@ -75,17 +78,21 @@ export default function App(props) {
   const [client, setClient] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null); //null => 체크안함 | true 체크하고 로긴함 | false 체크하고 로긴안함
   // Load any resources or data that we need prior to rendering the app
+
   React.useEffect(() => {
     async function loadResourcesAndDataAsync() {
+      await AsyncStorage.clear();
       try {
         SplashScreen.preventAutoHide();
-
+        // navigationstate Part
         setInitialNavigationState(await getInitialState());
+        // data preload Part
         await Asset.loadAsync([require("./assets/images/logo.png")]);
         await Font.loadAsync({
           ...Ionicons.font,
           "space-mono": require("./assets/fonts/SpaceMono-Regular.ttf")
         });
+        // cache Part
         const cache = new InMemoryCache();
         await persistCache({
           cache,
@@ -95,12 +102,14 @@ export default function App(props) {
           cache,
           ...apolloClientOptions
         });
+        // login data part
         const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
         if (!isLoggedIn || isLoggedIn === "false") {
           setIsLoggedIn(false);
         } else {
           setIsLoggedIn(true);
         }
+        // apollo client part
         setClient(client);
       } catch (e) {
         console.warn(e);
@@ -109,9 +118,10 @@ export default function App(props) {
         SplashScreen.hide();
       }
     }
+
     loadResourcesAndDataAsync();
   }, []);
-
+  console.log("isLoggedIn-->", isLoggedIn);
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {
@@ -126,11 +136,12 @@ export default function App(props) {
                 initialState={initialNavigationState}
               >
                 <Stack.Navigator
-                  initialRouteName={false ? "Root" : "Auth"}
+                  initialRouteName={!isLoggedIn ? "Auth" : "Root"}
                   headerMode={"none"}
                 >
                   <Stack.Screen name="Root" component={MainNavigation} />
                   <Stack.Screen name="Auth" component={AuthNavigation} />
+                  <Stack.Screen name="DEV" component={DEVScreen} />
                 </Stack.Navigator>
               </NavigationContainer>
             </View>

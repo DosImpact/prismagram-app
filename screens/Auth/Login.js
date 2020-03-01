@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useIsLoggedIn, useLogIn, useLogOut } from "../../AuthContext";
 
 import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
@@ -9,7 +7,7 @@ import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
 import { Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useMutation } from "@apollo/react-hooks";
-import { LOG_IN } from "./AuthQuery";
+import { REQUEST_SECRET } from "./AuthQuery";
 
 const View = styled.View`
   flex: 1;
@@ -20,13 +18,9 @@ const View = styled.View`
 const Text = styled.Text``;
 
 const Login = ({ navigation }) => {
-  const isLoggedIn = useIsLoggedIn();
-  const logIn = useLogIn();
-  const logOut = useLogOut();
-
   const emailInput = useInput("");
   const [loading, setLoading] = useState(false);
-  const [requestSecret, { data: LOG_IN_Data }] = useMutation(LOG_IN);
+  const [REQUEST_SECRET_Mutation] = useMutation(REQUEST_SECRET);
 
   const handleLogin = async () => {
     const { value } = emailInput;
@@ -38,10 +32,18 @@ const Login = ({ navigation }) => {
     } else {
       try {
         setLoading(true);
-        await requestSecret({ variables: { email: "ypd03008@gmail.com" } });
-        Alert.alert("check your email");
-        //console.log(LOG_IN_Data);
-        navigation.navigate("Confirm");
+        const { data: REQUEST_SECRET_data } = await REQUEST_SECRET_Mutation({
+          variables: { email: value }
+        });
+        const { requestSecret } = REQUEST_SECRET_data;
+
+        if (requestSecret) {
+          Alert.alert("check your email");
+          navigation.navigate("Confirm", { email: value });
+        } else {
+          Alert.alert("Account not Found");
+          navigation.navigate("Singup", { email: value });
+        }
       } catch (error) {
         console.log(error);
         Alert.alert("Can't log in now");

@@ -5,9 +5,11 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ isLoggedIn: isLoggedInProps, children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProps);
-  const logUserIn = async () => {
+  const logUserIn = async token => {
+    console.log("token is will save -> ", token);
     try {
       await AsyncStorage.setItem("isLoggedIn", "true");
+      await AsyncStorage.setItem("jwt", token);
       setIsLoggedIn(true);
     } catch (e) {
       console.log(e);
@@ -44,3 +46,7 @@ export const useLogOut = () => {
   const { logUserOut } = useContext(AuthContext);
   return logUserOut;
 };
+/**
+ * useLogin는 자체가 함수 이다.
+ * const login = useLogin() // 해서 함수의 리턴값을 이용해서 써라.!!!!!
+ */

@@ -32,7 +32,7 @@ export default ({ navigation }) => {
         <AuthButton
           text="Create New Account"
           onPress={() => {
-            navigation.navigate("Singup");
+            navigation.navigate("Singup", { name: "KIMDOYOUNG" });
           }}
         />
         <Touchable
