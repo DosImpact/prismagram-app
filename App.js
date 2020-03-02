@@ -81,7 +81,8 @@ export default function App(props) {
 
   React.useEffect(() => {
     async function loadResourcesAndDataAsync() {
-      await AsyncStorage.clear();
+      //console.log("--> await AsyncStorage.clear();");
+      //await AsyncStorage.clear();
       try {
         SplashScreen.preventAutoHide();
         // navigationstate Part

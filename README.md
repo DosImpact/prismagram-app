@@ -527,4 +527,40 @@ const googleLogin = async () => {
 
 # 13.1 TabIcons part Two (10:04)
 
+- Ionicons 은 iOS 랑 md 랑 두가지를 쓸 수 있다. | 또한 empty와 filled 가 있음
+- Material 아이콘도
+
 # 13.2 TabBar, Styles, Loader (7:33)
+
+# 14.0 Apollo Context (7:51)
+
+- jwt 토큰을 header에 입력을 해야함.
+- 입력은 쉽다.
+
+```js
+const token = "klalalal"; //await AsyncStorage.getItem("jwt");
+
+const link = new HttpLink({
+  uri: "http://10.0.2.2:4000",
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
+```
+
+- 그러나 App.js는 한번만 컴포넌트가 로딩되고, token는 업데이터가 안되는 상태.
+
+# 14.1 ScrollView and RefreshControl (6:36)
+
+## 수정 매번 request 마다 header를 변경하고 싶다.
+
+```js
+yarn add apollo-link-context
+```
+
+## ScrollView vs FlatList
+
+- if you wanna high performant inerface for rendering -> FlatList( huge Data in View )
+- FlatList can use with key,value
+
+## scrollView pull-to-refreshing

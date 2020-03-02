@@ -14,6 +14,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Text, View, Image } from "react-native";
 import HeaderButton from "../components/HeaderButton";
 import NavIcon from "../components/NavIcon";
+import { color } from "react-native-reanimated";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -46,7 +47,12 @@ const MessageIcon = ({ navigation }) => {
 
 export default function BottomTabNavigator({ navigation, route }) {
   return (
-    <BottomTab.Navigator tabBarOptions={{ showLabel: false }}>
+    <BottomTab.Navigator
+      tabBarOptions={{
+        showLabel: false,
+        style: { backgroundColor: "#FAFAFA" }
+      }}
+    >
       <BottomTab.Screen
         name="HomeTab"
         options={{
