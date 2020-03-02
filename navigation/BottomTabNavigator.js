@@ -52,6 +52,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         showLabel: false,
         style: { backgroundColor: "#FAFAFA" }
       }}
+      initialRouteName="HomeTab"
     >
       <BottomTab.Screen
         name="HomeTab"
@@ -78,29 +79,35 @@ export default function BottomTabNavigator({ navigation, route }) {
           </Stack.Navigator>
         )}
       </BottomTab.Screen>
-
       <BottomTab.Screen
-        name="Notifications"
-        component={Notifications}
+        name="SearchTab"
         options={{
-          title: "Notifications",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
-              name={Platform.OS === "ios" ? "ios-heart" : "md-heart"}
+              name={Platform.OS === "ios" ? "ios-search" : "md-search"}
             />
           )
         }}
-      />
+      >
+        {props => (
+          <Stack.Navigator {...props}>
+            <Stack.Screen name="SearchTabStack" component={Search} />
+          </Stack.Navigator>
+        )}
+      </BottomTab.Screen>
       <BottomTab.Screen
         name="Add"
         component={Add}
         options={{
-          title: "Add",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
-              name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+              name={
+                Platform.OS === "ios"
+                  ? "ios-add-circle-outline"
+                  : "md-add-circle-outline"
+              }
             />
           )
         }}
@@ -113,27 +120,25 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name="Profile"
-        component={Profile}
+        name="Notifications"
+        component={Notifications}
         options={{
-          title: "Profile",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
-              name={Platform.OS === "ios" ? "ios-person" : "md-person"}
+              name={Platform.OS === "ios" ? "ios-heart" : "md-heart"}
             />
           )
         }}
       />
       <BottomTab.Screen
-        name="Search"
-        component={Search}
+        name="Profile"
+        component={Profile}
         options={{
-          title: "Search",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
-              name={Platform.OS === "ios" ? "ios-search" : "md-search"}
+              name={Platform.OS === "ios" ? "ios-person" : "md-person"}
             />
           )
         }}

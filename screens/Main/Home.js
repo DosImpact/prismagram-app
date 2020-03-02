@@ -6,16 +6,39 @@ import { ScrollView, RefreshControl } from "react-native";
 //---test
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-const ME = gql`
+import Swiper from "react-native-swiper";
+import Loader from "../../components/Loader";
+import Post from "../../components/Post";
+
+const FEED_QUERY = gql`
   {
-    me {
-      name
-      email
-      fullName
+    seeFeed {
+      id
+      location
+      caption
+      user {
+        id
+        avatar
+        name
+      }
+      files {
+        id
+        url
+      }
+      likeCount
+      isLiked
+      comments {
+        id
+        text
+        user {
+          id
+          name
+        }
+      }
+      createdAt
     }
   }
 `;
-
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -26,19 +49,12 @@ const Text = styled.Text``;
 
 export default ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
-  const { loading: ME_loading, data: ME_data, refetch } = useQuery(ME);
-
-  const handleGetToken = async () => {
-    const getTokenfromStore = await AsyncStorage.getItem("jwt");
-    console.log("--> token from store", getTokenfromStore);
-  };
-
+  const { loading, data, refetch } = useQuery(FEED_QUERY);
   const handleReFetch = async () => {
     try {
       setRefreshing(true);
-      console.log(refetch);
       await refetch();
-      console.log("--> Data Fechting with jwt", ME_loading, ME_data);
+      // console.log("--> Data Fechting", loading, data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -52,13 +68,13 @@ export default ({ navigation, route }) => {
         <RefreshControl refreshing={refreshing} onRefresh={handleReFetch} />
       }
     >
-      <Text>Home</Text>
-      <TouchableOpacity onPress={handleGetToken}>
-        <Text>Get Token</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleReFetch}>
-        <Text>Get handleReFetch</Text>
-      </TouchableOpacity>
+      {loading ? (
+        <Loader />
+      ) : (
+        data &&
+        data.seeFeed &&
+        data.seeFeed.map(post => <Post key={post.id} {...post} />)
+      )}
     </ScrollView>
   );
 };
