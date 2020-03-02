@@ -558,9 +558,83 @@ const link = new HttpLink({
 yarn add apollo-link-context
 ```
 
+- link: authLink.concat(link) 을 이용해서 매번 request마다 link를 업데이트 해줌!
+
+```js
+import { HttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
+import { AsyncStorage } from "react-native";
+
+const authLink = setContext(async (_, { headers }) => {
+  const token = await AsyncStorage.getItem("jwt");
+  console.log("--> request update -->", token);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : ""
+    }
+  };
+});
+
+const link = new HttpLink({
+  uri: "http://10.0.2.2:4000"
+});
+
+const options = {
+  link: authLink.concat(link)
+};
+
+export default options;
+```
+
+- link: authLink.concat(link) 을 이용해서 매번 request마다 link를 업데이트 해줌!
+
 ## ScrollView vs FlatList
 
 - if you wanna high performant inerface for rendering -> FlatList( huge Data in View )
 - FlatList can use with key,value
 
 ## scrollView pull-to-refreshing
+
+- 1. useQuery 에서 refect 인자 받아오기 | Fn 실행시 데이터 업데이트 함
+
+```js
+import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
+
+const ME = gql`
+  {
+    me {
+      name
+      email
+      fullName
+    }
+  }
+`;
+
+const { loading: ME_loading, data: ME_data, refetch } = useQuery(ME);
+```
+
+- 2. ScrollView 의 RefreshControl 추가하기 | refreshing = Boolean | handleReFetch = callback
+
+```js
+import { ScrollView, RefreshControl } from "react-native";
+
+const [refreshing, setRefreshing] = useState(false);
+const handleReFetch = async () => {
+  try {
+    setRefreshing(true);
+    await refetch();
+    console.log("--> Data Fechting with jwt", ME_loading, ME_data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setRefreshing(false);
+  }
+};
+<ScrollView
+  refreshControl={
+    <RefreshControl refreshing={refreshing} onRefresh={handleReFetch} />
+  }
+></ScrollView>;
+```
