@@ -456,15 +456,75 @@ const fbLogin = async () => {
 
 # 12.10 Google Login (11:24)
 
+### 1. 설치 및 임포트
+
 - Google 로그인-> expo 앱에서 사용하는 방법이랑 | standalone 사용법이랑 다르다.
+
+```js
+expo install expo-google-app-auth
+import * as Google from "expo-google-app-auth";
+```
+
+### 2. Client ID 얻기
+
+- Google APIs 가서 expo 문서대로 절차를 밟기
+
 - iOS Client ID
 
 ```
 1048824293201-hkjen58cu3256p8l5fo9l87q6ab5l41m.apps.googleusercontent.com
 ```
 
+- Android Client ID
+
 ```
 1048824293201-hto3c3v87unpql4o4c795lfkc0pqkm8n.apps.googleusercontent.com
 ```
 
+### 3. 사용하기
+
+```js
+const googleLogin = async () => {
+  const GOOGLE_ID_iosClient =
+    "1048824293201-hkjen58cu3256p8l5fo9l87q6ab5l41m.apps.googleusercontent.com";
+  const GOOGLE_ID_AndroidClient =
+    "1048824293201-hto3c3v87unpql4o4c795lfkc0pqkm8n.apps.googleusercontent.com";
+  try {
+    setLoading(true);
+    const result = await Google.logInAsync({
+      androidClientId: GOOGLE_ID_AndroidClient,
+      iosClientId: GOOGLE_ID_iosClient,
+      scopes: ["profile", "email"]
+    });
+
+    if (result.type === "success") {
+      const userInfoResponse = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${result.accessToken}` }
+        }
+      );
+      const { email, family_name, given_name } = await userInfoResponse.json();
+      updateFromData(email, given_name, family_name);
+    } else {
+      return { cancelled: true };
+    }
+  } catch (e) {
+    return { error: true };
+  } finally {
+    setLoading(false);
+  }
+};
+```
+
 - TODO :// react-native-dotenv
+
+# 13.0 TabIcons part One (12:50)
+
+//headercenter 이미지
+//header right 아이콘
+//바텀탭 아이콘설정
+
+# 13.1 TabIcons part Two (10:04)
+
+# 13.2 TabBar, Styles, Loader (7:33)

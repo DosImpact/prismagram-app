@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
+import { createStackNavigator } from "@react-navigation/stack";
 import TabBarIcon from "../components/TabBarIcon";
 
 import {
@@ -11,50 +11,78 @@ import {
   Add
 } from "../screens/Main/index";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Text } from "react-native";
+import { Text, View, Image } from "react-native";
 import HeaderButton from "../components/HeaderButton";
+import NavIcon from "../components/NavIcon";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
-export default function BottomTabNavigator({ navigation, route }) {
-  //console.log(navigation, route);
-  // Set the header title on the parent stack navigator depending on the
-  // currently active tab. Learn more in the documentation:
-  // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({
-    headerTitle: getHeaderTitle(route),
-    headerTitleAlign: "center",
-    headerRight: () => (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("MessageNavigation");
-        }}
-      >
-        <Text>Mesg</Text>
-      </TouchableOpacity>
-    )
-  });
+const Stack = createStackNavigator();
 
+const LogoImage = () => {
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <Image
+      style={{ height: 35 }}
+      resizeMode="contain"
+      source={require("../assets/images/logo.png")}
+    />
+  );
+};
+
+const MessageIcon = ({ navigation }) => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("MessageNavigation");
+      }}
+    >
+      <NavIcon
+        name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
+      />
+    </TouchableOpacity>
+  );
+};
+
+export default function BottomTabNavigator({ navigation, route }) {
+  return (
+    <BottomTab.Navigator tabBarOptions={{ showLabel: false }}>
       <BottomTab.Screen
-        name="Home"
-        component={Home}
+        name="HomeTab"
         options={{
-          title: "Home",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-code-working" />
+            <TabBarIcon
+              focused={focused}
+              name={Platform.OS === "ios" ? "ios-home" : "md-home"}
+            />
           )
         }}
-      />
+      >
+        {props => (
+          <Stack.Navigator {...props}>
+            <Stack.Screen
+              name="HomeTabStack"
+              component={Home}
+              options={{
+                headerTitleAlign: "center",
+                headerTitle: () => <LogoImage />,
+                headerRight: () => <MessageIcon navigation={navigation} />
+              }}
+            />
+          </Stack.Navigator>
+        )}
+      </BottomTab.Screen>
+
       <BottomTab.Screen
         name="Notifications"
         component={Notifications}
         options={{
           title: "Notifications",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-code-working" />
+            <TabBarIcon
+              focused={focused}
+              name={Platform.OS === "ios" ? "ios-heart" : "md-heart"}
+            />
           )
         }}
       />
@@ -64,7 +92,10 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Add",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-code-working" />
+            <TabBarIcon
+              focused={focused}
+              name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+            />
           )
         }}
         listeners={{
@@ -81,7 +112,10 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Profile",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-code-working" />
+            <TabBarIcon
+              focused={focused}
+              name={Platform.OS === "ios" ? "ios-person" : "md-person"}
+            />
           )
         }}
       />
@@ -91,28 +125,13 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Search",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-code-working" />
+            <TabBarIcon
+              focused={focused}
+              name={Platform.OS === "ios" ? "ios-search" : "md-search"}
+            />
           )
         }}
       />
     </BottomTab.Navigator>
   );
-}
-
-function getHeaderTitle(route) {
-  const routeName =
-    route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
-
-  switch (routeName) {
-    case "Home":
-      return "HOME";
-    case "Notifications":
-      return "NOTICE";
-    case "Add":
-      return "ADD PHOTH";
-    case "Profile":
-      return "PROFILE";
-    case "Search":
-      return "SEARCH";
-  }
 }

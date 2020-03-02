@@ -136,7 +136,7 @@ export default function App(props) {
                 initialState={initialNavigationState}
               >
                 <Stack.Navigator
-                  initialRouteName={!isLoggedIn ? "Auth" : "Root"}
+                  initialRouteName={false ? "Auth" : "Root"}
                   headerMode={"none"}
                 >
                   <Stack.Screen name="Root" component={MainNavigation} />
