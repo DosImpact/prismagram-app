@@ -433,9 +433,16 @@ const fbLogin = async () => {
     if (type === "success") {
       // Get the user's name using Facebook's Graph API
       const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`
+        `https://graph.facebook.com/me?access_token=${token}&fields=id,last_name,first_name,email`
       );
-      Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+      //Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+      const { email, first_name, last_name } = await response.json();
+      emailInput.setValue(email);
+      firstNameInput.setValue(first_name);
+      lastNameInput.setValue(last_name);
+      const [name] = email.split("@");
+      nameInput.setValue(name);
+      setLoading(false);
     } else {
       // type === 'cancel'
     }
@@ -448,3 +455,16 @@ const fbLogin = async () => {
 # 12.9 Facebook Login part Two (9:28)
 
 # 12.10 Google Login (11:24)
+
+- Google 로그인-> expo 앱에서 사용하는 방법이랑 | standalone 사용법이랑 다르다.
+- iOS Client ID
+
+```
+1048824293201-hkjen58cu3256p8l5fo9l87q6ab5l41m.apps.googleusercontent.com
+```
+
+```
+1048824293201-hto3c3v87unpql4o4c795lfkc0pqkm8n.apps.googleusercontent.com
+```
+
+- TODO :// react-native-dotenv

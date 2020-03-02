@@ -10,6 +10,7 @@ import { useMutation } from "@apollo/react-hooks";
 import { CREATE_ACCOUNT } from "./AuthQuery";
 
 import * as Facebook from "expo-facebook";
+import * as Google from "expo-google-app-auth";
 
 const View = styled.View`
   flex: 1;
@@ -86,11 +87,7 @@ const Login = ({ navigation }) => {
         );
         //Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
         const { email, first_name, last_name } = await response.json();
-        emailInput.setValue(email);
-        firstNameInput.setValue(first_name);
-        lastNameInput.setValue(last_name);
-        const [name] = email.split("@");
-        nameInput.setValue(name);
+        updateFromData(email, first_name, last_name);
         setLoading(false);
       } else {
         // type === 'cancel'
@@ -100,6 +97,48 @@ const Login = ({ navigation }) => {
     }
   };
 
+  const googleLogin = async () => {
+    const GOOGLE_ID_iosClient =
+      "1048824293201-hkjen58cu3256p8l5fo9l87q6ab5l41m.apps.googleusercontent.com";
+    const GOOGLE_ID_AndroidClient =
+      "1048824293201-hto3c3v87unpql4o4c795lfkc0pqkm8n.apps.googleusercontent.com";
+    try {
+      setLoading(true);
+      const result = await Google.logInAsync({
+        androidClientId: GOOGLE_ID_AndroidClient,
+        iosClientId: GOOGLE_ID_iosClient,
+        scopes: ["profile", "email"]
+      });
+
+      if (result.type === "success") {
+        const userInfoResponse = await fetch(
+          "https://www.googleapis.com/userinfo/v2/me",
+          {
+            headers: { Authorization: `Bearer ${result.accessToken}` }
+          }
+        );
+        const {
+          email,
+          family_name,
+          given_name
+        } = await userInfoResponse.json();
+        updateFromData(email, given_name, family_name);
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      return { error: true };
+    } finally {
+      setLoading(false);
+    }
+  };
+  const updateFromData = (email, firstName, lastName) => {
+    emailInput.setValue(email);
+    firstNameInput.setValue(firstName);
+    lastNameInput.setValue(lastName);
+    const [name] = email.split("@");
+    nameInput.setValue(name);
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -134,6 +173,12 @@ const Login = ({ navigation }) => {
             loading={false}
             onPress={fbLogin}
             text="Connect Facebook"
+          />
+          <AuthButton
+            bgColor={"#EE1922"}
+            loading={false}
+            onPress={googleLogin}
+            text="Connect Google"
           />
         </FBContainer>
       </View>
