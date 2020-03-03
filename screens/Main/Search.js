@@ -65,11 +65,11 @@ export default ({ navigation, route }) => {
   });
 
   const handleOnChange = text => {
-    console.log("-->handleOnChange", text);
+    //console.log("-->handleOnChange", text);
     setSearchInput(text);
   };
   const handleSubmit = async () => {
-    console.log("-->handleSubmit", refreshing, fetchTrigger);
+    //console.log("-->handleSubmit", refreshing, fetchTrigger);
     setFetchTrigger(l => !l);
     setRefreshing(l => !l);
   };
@@ -84,7 +84,7 @@ export default ({ navigation, route }) => {
       } finally {
       }
     };
-    console.log("-->useEffect fetchTrigger", fetchTrigger, refreshing);
+    //console.log("-->useEffect fetchTrigger", fetchTrigger, refreshing);
     if (refreshing) {
       handleData();
     }
@@ -106,7 +106,9 @@ export default ({ navigation, route }) => {
       ) : (
         data &&
         data.searchPost &&
-        data.searchPost.map(post => <SquarePhoto key={post.id} {...post} />)
+        data.searchPost.map(post => (
+          <SquarePhoto navigation={navigation} key={post.id} {...post} />
+        ))
       )}
     </ScrollView>
   );

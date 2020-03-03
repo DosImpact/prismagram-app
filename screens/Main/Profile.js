@@ -1,24 +1,30 @@
-import React from "react";
-import styled from "styled-components";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import React, { useEffect } from "react";
+import { ScrollView } from "react-native";
+import gql from "graphql-tag";
+import { USER_FRAGMENT } from "../../api/fragments";
+import Loader from "../../components/Loader";
+import { useQuery } from "@apollo/react-hooks";
+import UserProfile from "../../components/UserProfile";
 
-const View = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
+export const ME = gql`
+  {
+    me {
+      ...UserParts
+    }
+  }
+  ${USER_FRAGMENT}
 `;
 
-const Text = styled.Text``;
-
-export default ({ navigation, route }) => (
-  <View>
-    <Text>Profile</Text>
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate("Common", { name: "Profile" });
-      }}
-    >
-      <Text>Move to common</Text>
-    </TouchableOpacity>
-  </View>
-);
+export default ({ navigation }) => {
+  const { loading, data } = useQuery(ME);
+  //console.log(data);
+  return (
+    <ScrollView>
+      {loading ? (
+        <Loader />
+      ) : (
+        data && data.me && <UserProfile navigation={navigation} {...data.me} />
+      )}
+    </ScrollView>
+  );
+};

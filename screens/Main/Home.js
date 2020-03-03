@@ -9,35 +9,15 @@ import { useQuery } from "@apollo/react-hooks";
 import Swiper from "react-native-swiper";
 import Loader from "../../components/Loader";
 import Post from "../../components/Post";
+import { POST_FRAGMENT } from "../../api/fragments";
 
 const FEED_QUERY = gql`
   {
     seeFeed {
-      id
-      location
-      caption
-      user {
-        id
-        avatar
-        name
-      }
-      files {
-        id
-        url
-      }
-      likeCount
-      isLiked
-      comments {
-        id
-        text
-        user {
-          id
-          name
-        }
-      }
-      createdAt
+      ...PostParts
     }
   }
+  ${POST_FRAGMENT}
 `;
 const View = styled.View`
   justify-content: center;
@@ -73,7 +53,9 @@ export default ({ navigation, route }) => {
       ) : (
         data &&
         data.seeFeed &&
-        data.seeFeed.map(post => <Post key={post.id} {...post} />)
+        data.seeFeed.map(post => (
+          <Post navigation={navigation} key={post.id} {...post} />
+        ))
       )}
     </ScrollView>
   );

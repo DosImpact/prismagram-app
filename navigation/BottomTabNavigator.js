@@ -12,10 +12,10 @@ import {
 } from "../screens/Main/index";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Text, View, Image } from "react-native";
-import HeaderButton from "../components/HeaderButton";
+
 import NavIcon from "../components/NavIcon";
-import { color } from "react-native-reanimated";
-import Test from "../screens/Main/Test";
+import Detail from "../screens/Detail";
+import UserDetail from "../screens/UserDetail";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -43,16 +43,6 @@ const MessageIcon = ({ navigation }) => {
         name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
       />
     </TouchableOpacity>
-  );
-};
-
-const StackFactory = props => {
-  const { initalRouteName, initalRouteComponent } = props;
-  return (
-    <Stack.Navigator {...props}>
-      <Stack.Screen name="HomeTabStack" component={Home} />
-      <Stack.Screen name="Common" component={Test} />
-    </Stack.Navigator>
   );
 };
 
@@ -87,7 +77,8 @@ export default function BottomTabNavigator({ navigation, route }) {
                 headerRight: () => <MessageIcon navigation={navigation} />
               }}
             />
-            <Stack.Screen name="Common" component={Test} />
+            <Stack.Screen name="Detail" component={Detail} />
+            <Stack.Screen name="UserDetail" component={UserDetail} />
           </Stack.Navigator>
         )}
       </BottomTab.Screen>
@@ -105,7 +96,8 @@ export default function BottomTabNavigator({ navigation, route }) {
         {props => (
           <Stack.Navigator {...props}>
             <Stack.Screen name="SearchTabStack" component={Search} />
-            <Stack.Screen name="Common" component={Test} />
+            <Stack.Screen name="Detail" component={Detail} />
+            <Stack.Screen name="UserDetail" component={UserDetail} />
           </Stack.Navigator>
         )}
       </BottomTab.Screen>
@@ -149,7 +141,8 @@ export default function BottomTabNavigator({ navigation, route }) {
               name="Notifications"
               component={Notifications}
             ></Stack.Screen>
-            <Stack.Screen name="Common" component={Test} />
+            <Stack.Screen name="Detail" component={Detail} />
+            <Stack.Screen name="UserDetail" component={UserDetail} />
           </Stack.Navigator>
         )}
       </BottomTab.Screen>
@@ -167,7 +160,8 @@ export default function BottomTabNavigator({ navigation, route }) {
         {props => (
           <Stack.Navigator>
             <Stack.Screen name="Profile" component={Profile}></Stack.Screen>
-            <Stack.Screen name="Common" component={Test} />
+            <Stack.Screen name="Detail" component={Detail} />
+            <Stack.Screen name="UserDetail" component={UserDetail} />
           </Stack.Navigator>
         )}
       </BottomTab.Screen>

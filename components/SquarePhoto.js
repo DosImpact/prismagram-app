@@ -7,9 +7,8 @@ const SquarePhoto = ({ navigation, files = [], id }) => {
   // console.log("--> data incoming ->", id, files);
   return (
     <TouchableOpacity
-      style={{
-        width: Layout.window.width / 3,
-        height: Layout.window.width / 3
+      onPress={() => {
+        navigation.navigate("Detail", { id: id });
       }}
     >
       <Image

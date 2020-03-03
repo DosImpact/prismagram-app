@@ -48,6 +48,7 @@ const CommentCount = styled.Text`
   font-size: 13px;
 `;
 const Post = ({
+  navigation,
   id,
   user,
   location,
@@ -81,13 +82,21 @@ const Post = ({
   return (
     <Container>
       <Header>
-        <Touchable>
+        <Touchable
+          onPress={() => {
+            navigation.navigate("UserDetail", { name: user.name });
+          }}
+        >
           <Image
             style={{ height: 40, width: 40, borderRadius: 20 }}
             source={{ uri: user.avatar }}
           />
         </Touchable>
-        <Touchable>
+        <Touchable
+          onPress={() => {
+            navigation.navigate("UserDetail", { name: user.name });
+          }}
+        >
           <HeaderUserContainer>
             <Bold>{user.name}</Bold>
             <Location>{location}</Location>

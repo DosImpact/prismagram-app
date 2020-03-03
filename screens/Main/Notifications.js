@@ -15,10 +15,10 @@ export default ({ navigation, route }) => (
     <Text>Notifications</Text>
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Common", { name: "Notifications" });
+        navigation.navigate("Detail", { name: "Notifications" });
       }}
     >
-      <Text>Move to common</Text>
+      <Text>Move to Detail</Text>
     </TouchableOpacity>
   </View>
 );
