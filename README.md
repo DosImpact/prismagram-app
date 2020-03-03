@@ -638,3 +638,56 @@ const handleReFetch = async () => {
   }
 ></ScrollView>;
 ```
+
+# 15 App: Post Component
+
+- 요약 : Home화면 만듬 | 쿼리(seeFeed, setLike) | Post컴포넌트 ( 헤더부분, 사진 swiper, 좋아요 백 연결)
+
+# 16 App: Search Screen
+
+- 요약 : Navigation header에 검색창 만듬 | Search Query를 실행
+
+# 16.0 Search as HeaderTitle part One (10:23)
+
+# 16.1 Search as HeaderTitle part Two (8:21)
+
+# 16.2 Search Query (9:50)
+
+- Query 옵션 : 스킵가능! | fetch정책 : 캐쉬먼저(디폴트) | 캐쉬만 | 네트워크만
+
+# 16.3 Search Photo (11:42)
+
+- SquarePhoto : 사진을 예쁘게 사각형으로 보여준다. ( search 결과)
+- Detail : 사진을클릭했을때 자세한 정보를 보여주도록 한다. ( searchTab의 stacknavigation에 Detail.js 추가 )
+
+# 16.4 Photo Detail (10:00)
+
+## 공통된 쿼리 부분은 fragment로 나누기.
+
+- seeFeed SeeFullPost 을 보면 [Post],Post를 리턴한다.
+- 그럼 사실상 gql코드는 겹치는 부분이 많다.
+- gql 문법으로 fragment를 사용하는 방법을 araboja
+
+# 17.0 Profile Screen (11:13)
+
+- profile 스크린을 꾸밀 Profile 컴포넌트 만들꺼임.
+- fragment 작성...-> fragment 속에 fragment 만들기
+
+# 17.1 User Detail Screen (5:57)
+
+- UserProfile 하나의 컴포넌트는 Home의 스택에서도 사용하고, profil에서도 사용한다.
+- StackFactory 구현 목적 : Home에서 userName 클릭해도 프로파일 | Search에도 사진 -> userName 클릭해도 프로파일 | Profile 텝도 -> 프로파일
+- 구현 방법은, 각각의 TabNav에 stack 자식을 공통으로 추가할 인자를 빼는겨 -> createStackFactory라는 이름으로.
+
+# 17.2 UserProfile Component Styles (14:51)
+
+- Profile 컴포넌트에서 -> navigation의 header의 이름 설정해주기
+-
+
+# 17.3 UserProfile Photo Rendering (5:31)
+
+- 테스트 해보기 : navigation은 똑똑하기 때문에, 이름만 입력하면, 알아서 뒤로가고, 앞으로 가고 할꺼임.!!
+
+* Home 이름 클릭-> 프로필
+* 검색 -> 사진 클릭 -> 포스트 -> 프로필
+* 내 프로필
