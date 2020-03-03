@@ -26,6 +26,8 @@ const View = styled.View`
 const Text = styled.Text``;
 
 export default ({ navigation, route }) => {
+  const { params } = route;
+  console.log(params);
   const [refreshing, setRefreshing] = useState(false);
   const { loading: ME_loading, data: ME_data, refetch } = useQuery(ME);
 
