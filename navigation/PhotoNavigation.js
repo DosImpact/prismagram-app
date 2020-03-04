@@ -5,14 +5,26 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { SelectPhoto, TakePhoto, UploadPhoto } from "../screens/Photo/index";
 
+import theme from "../styles/theme";
+
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 const PhotoTabs = () => {
   return (
-    <Tab.Navigator tabBarPosition="bottom">
-      <Tab.Screen name="SelectPhoto" component={SelectPhoto} />
-      <Tab.Screen name="TakePhoto" component={TakePhoto} />
+    <Tab.Navigator
+      tabBarPosition="bottom"
+      tabBarOptions={{
+        indicatorStyle: {
+          backgroundColor: theme.blackColor
+        },
+        tabStyle: {
+          backgroundColor: theme.greyColor
+        }
+      }}
+    >
+      <Tab.Screen name="Select" component={SelectPhoto} />
+      <Tab.Screen name="Take" component={TakePhoto} />
     </Tab.Navigator>
   );
 };

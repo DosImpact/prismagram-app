@@ -691,3 +691,117 @@ const handleReFetch = async () => {
 * Home 이름 클릭-> 프로필
 * 검색 -> 사진 클릭 -> 포스트 -> 프로필
 * 내 프로필
+
+# 18.0 Tab Styles (6:58)
+
+# 18.1 Select Photo part One (10:54)
+
+- 목적 : 사진앨범에서 사진 uri 가져와서 보여주기
+
+### 1. 설치하기
+
+- [https://docs.expo.io/versions/latest/sdk/media-library/#medialibrarygetassetsasyncoptions](https://docs.expo.io/versions/latest/sdk/media-library/#medialibrarygetassetsasyncoptions)
+
+- [https://docs.expo.io/versions/v36.0.0/sdk/permissions/#permissionsaskasynctypes](https://docs.expo.io/versions/v36.0.0/sdk/permissions/#permissionsaskasynctypes)
+
+```
+expo install expo-permissions
+expo install expo-media-library
+```
+
+### 2. 권한 요청
+
+```js
+import * as Permissions from "expo-permissions";
+import * as MediaLibrary from "expo-media-library";
+
+const askPermission = async () => {
+  try {
+    const { status, permissions } = await Permissions.askAsync(
+      Permissions.CAMERA_ROLL
+    );
+    if (status === "granted") {
+      // setHasPermission(true);
+      // getPhotos();
+    }
+  } catch (error) {
+    //setHasPermission(false);
+    console.error(error);
+  }
+};
+
+useEffect(() => {
+  askPermission();
+  return () => {};
+}, []);
+```
+
+### 3. 앨범에서 데이터 가져오기
+
+- 주의 : 사진이 하나라도 없으면 assets은 빈 배열
+
+```js
+const getPhotos = async () => {
+  try {
+    const { assets } = await MediaLibrary.getAssetsAsync();
+    console.log(assets);
+    const [firstPhoto] = assets;
+    setSelected(firstPhoto);
+    setAllPhotos(assets);
+  } catch (error) {
+  } finally {
+    setLoading(false);
+  }
+};
+```
+
+- 앨범의 데이터는 다음과 같다. ( 사진의 정보가 uri 이다. => 왜 Image컴포넌트가 source{{uri}}를 쓰는지 알겠다.)
+
+```js
+Array [
+  Object {
+    "albumId": "540528482",
+    "creationTime": 0,
+    "duration": 0,
+    "filename": "4f8075cdfeb5064e0c50e869549b860d.png",
+    "height": 1927,
+    "id": "24",
+    "mediaType": "photo",
+    "modificationTime": 1583293178000,
+    "uri": "file:///storage/emulated/0/Download/4f8075cdfeb5064e0c50e869549b860d.png",
+    "width": 1117,
+  },
+]
+```
+
+- 사용하기
+
+````js
+  <Image
+    style={{ width: 100, height: 100 }}
+    source={{ uri: selected.uri }}
+  ></Image>
+```
+
+# 18.2 Select Photo part Two (5:46)
+
+# 18.3 Take Photo part One (10:35)
+
+# 18.4 Take Photo part Two (7:04)
+
+# 18.5 Saving Photo (11:46)
+
+# 18.6 Navigating to Upload Photo (7:22)
+
+# 18.7 Preparing for Upload (10:20)
+
+# 18.8 Uploading to Backend (10:14)
+
+# 18.9 Uploading to S3 (8:09)
+
+# 18.10 Uploading Mutation (12:39)
+
+# 18.11 Showing off! (4:19)
+
+# 18.12 Messages and Notifications (1:42)
+````
