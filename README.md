@@ -776,16 +776,37 @@ Array [
 
 - 사용하기
 
-````js
-  <Image
-    style={{ width: 100, height: 100 }}
-    source={{ uri: selected.uri }}
-  ></Image>
+```js
+<Image
+  style={{ width: 100, height: 100 }}
+  source={{ uri: selected.uri }}
+></Image>
+```
+
+- Grid LIke View
+
+```js
+<ScrollView contentContainerStyle={{ flexDirection: "row" }}>
+  {allPhotos.map(photo => (
+    <Image
+      key={photo.id}
+      style={{
+        width: Layout.screen.width / 3,
+        height: Layout.screen.width / 3
+      }}
+      source={{ uri: photo.uri }}
+    ></Image>
+  ))}
+</ScrollView>
 ```
 
 # 18.2 Select Photo part Two (5:46)
 
 # 18.3 Take Photo part One (10:35)
+
+```js
+expo install expo-camera
+```
 
 # 18.4 Take Photo part Two (7:04)
 
@@ -804,4 +825,7 @@ Array [
 # 18.11 Showing off! (4:19)
 
 # 18.12 Messages and Notifications (1:42)
-````
+
+```
+
+```

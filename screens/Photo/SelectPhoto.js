@@ -1,3 +1,7 @@
+/**
+ *
+ * 컴포넌트 한번 랜더링후에는 사진이 안불러와짐.
+ */
 import React, { useState, useEffect } from "react";
 import { Image } from "react-native";
 import styled from "styled-components";
@@ -6,7 +10,7 @@ import * as Permissions from "expo-permissions";
 import * as MediaLibrary from "expo-media-library";
 import Loader from "../../components/Loader";
 import Layout from "../../constants/Layout";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 const View = styled.View`
   flex: 1;
@@ -20,10 +24,14 @@ export default () => {
   const [selected, setSelected] = useState();
   const [allPhotos, setAllPhotos] = useState();
 
+  const changeSelected = id => {
+    setSelected(id);
+  };
+
   const getPhotos = async () => {
     try {
       const { assets } = await MediaLibrary.getAssetsAsync();
-      console.log(assets);
+      //console.log(assets);
       const [firstPhoto] = assets;
       setSelected(firstPhoto);
       setAllPhotos(assets);
@@ -60,16 +68,25 @@ export default () => {
             style={{ width: Layout.screen.width, height: Layout.screen.width }}
             source={{ uri: selected.uri }}
           ></Image>
-          <ScrollView contentContainerStyle={{ flexDirection: "row" }}>
+          <ScrollView
+            contentContainerStyle={{ flexDirection: "column-reverse" }}
+          >
             {allPhotos.map(photo => (
-              <Image
+              <TouchableOpacity
                 key={photo.id}
-                style={{
-                  width: Layout.screen.width / 3,
-                  height: Layout.screen.width / 3
+                onPress={() => {
+                  changeSelected(photo);
                 }}
-                source={{ uri: photo.uri }}
-              ></Image>
+              >
+                <Image
+                  style={{
+                    width: Layout.screen.width / 3,
+                    height: Layout.screen.width / 3,
+                    opacity: photo.id === selected.id ? 0.5 : 1
+                  }}
+                  source={{ uri: photo.uri }}
+                ></Image>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </>
