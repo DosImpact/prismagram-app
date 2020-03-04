@@ -819,7 +819,39 @@ expo install expo-camera
 
 # 18.7 Preparing for Upload (10:20)
 
+- 대망의 사진 업로드
+- GraphQL은 query를 위한것이다. 지원(resources)의 업로드나 다운로드에는 적합하지 않다.
+- REST 는 리소스를 다루기 위한 모든것들이 준비되어있다. : multipart 타입 업로드, 업로드 일시정지, 다운로드 일시정지, header,쿠기 만들수 있음.
+
+- 1. 파일업로드는 AWS S3에 하고난 다음에,
+- 2. 해당 링크를 가져와서 GraphQL의 Mutation을 시행!
+
 # 18.8 Uploading to Backend (10:14)
+
+```js
+yarn add axios
+```
+
+- axios.post -> 네트워크애러
+
+1. 원인 : AVD localhost는 사용못함. "http://3225dde1.ngrok.io/api/upload", 이용 하나의 방법
+2. 원인 : formData와 content-type이 알맞지 않으면 아예 응답을 안한다. (미들웨어 작동 X)
+
+```js
+ 안드로이드의 파일구조
+ filename :  Object {
+  "albumId": "540528482",
+  "creationTime": 0,
+  "duration": 0,
+  "filename": "db1f273a13a1a031ec9c611eaecda393.png",
+  "height": 2000,
+  "id": "25",
+  "mediaType": "photo",
+  "modificationTime": 1583297411000,
+  "uri": "file:///storage/emulated/0/Download/db1f273a13a1a031ec9c611eaecda393.png",
+  "width": 1983,
+}
+```
 
 # 18.9 Uploading to S3 (8:09)
 

@@ -26,6 +26,7 @@
     "apollo-client": "^2.6.8",
     "apollo-link-context": "^1.0.19",
     "apollo-link-http": "^1.5.16",
+    "axios": "^0.19.2",
     "expo": "~36.0.0",
     "expo-asset": "~8.0.0",
     "expo-camera": "~8.0.0",
