@@ -812,6 +812,9 @@ expo install expo-camera
 
 # 18.5 Saving Photo (11:46)
 
+- 사진찍기 : Camera 컴포넌트
+- 미디어 라이브러리 : 사진저장하기
+
 # 18.6 Navigating to Upload Photo (7:22)
 
 # 18.7 Preparing for Upload (10:20)

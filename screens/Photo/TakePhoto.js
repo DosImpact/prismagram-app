@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Image, Platform } from "react-native";
 import styled from "styled-components";
 
 import * as Permissions from "expo-permissions";
+import * as MediaLibrary from "expo-media-library";
 import { Camera } from "expo-camera";
 
 import Loader from "../../components/Loader";
@@ -13,9 +14,18 @@ import theme from "../../styles/theme";
 
 const View = styled.View`
   flex: 1;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Text = styled.Text``;
+
+const Button = styled.View`
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  border: 10px solid ${theme.lightGreyColor};
+`;
 
 export default props => {
   const {
@@ -25,6 +35,24 @@ export default props => {
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   const [type, setType] = useState(Camera.Constants.Type.back);
+
+  const [canTakePhoto, setCanTakePhoto] = useState(true);
+  const cameraRef = useRef();
+  const takePhotos = async () => {
+    try {
+      setCanTakePhoto(false);
+      //const photo = await cameraRef.current.takePictureAsync({ quality: 1, exif: true });
+      const { uri } = await cameraRef.current.takePictureAsync({
+        quality: 1,
+        exif: true
+      });
+      const asset = await MediaLibrary.createAssetAsync(uri);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setCanTakePhoto(true);
+    }
+  };
 
   const askPermission = async () => {
     try {
@@ -52,48 +80,61 @@ export default props => {
       {loading ? (
         <Loader />
       ) : hasPermission ? (
-        <Camera
-          style={{
-            width: Layout.screen.width,
-            height: Layout.screen.height / 1.5
-          }}
-          type={type}
-        >
-          <View
+        <>
+          <Camera
+            ref={cameraRef}
             style={{
-              flex: 1,
-              backgroundColor: "transparent",
-              flexDirection: "row"
+              width: Layout.screen.width,
+              height: Layout.screen.height / 1.5
             }}
+            type={type}
           >
-            <TouchableOpacity
+            <View
               style={{
                 flex: 1,
-                alignSelf: "flex-end",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                padding: 20
-              }}
-              onPress={() => {
-                setType(
-                  type === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back
-                );
+                backgroundColor: "transparent",
+                flexDirection: "row"
               }}
             >
-              <Ionicons
-                size={28}
-                name={
-                  Platform.OS === "ios"
-                    ? "ios-reverse-camera"
-                    : "md-reverse-camera"
-                }
-                color={theme.lightGreyColor}
-              />
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  alignSelf: "flex-end",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  padding: 20
+                }}
+                onPress={() => {
+                  setType(
+                    type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back
+                  );
+                }}
+              >
+                <Ionicons
+                  size={28}
+                  name={
+                    Platform.OS === "ios"
+                      ? "ios-reverse-camera"
+                      : "md-reverse-camera"
+                  }
+                  color={theme.lightGreyColor}
+                />
+              </TouchableOpacity>
+            </View>
+          </Camera>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                takePhotos();
+              }}
+              disabled={!canTakePhoto}
+            >
+              <Button />
             </TouchableOpacity>
           </View>
-        </Camera>
+        </>
       ) : null}
     </View>
   );
