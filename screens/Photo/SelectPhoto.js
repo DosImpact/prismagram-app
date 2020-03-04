@@ -5,10 +5,10 @@ import styled from "styled-components";
 import * as Permissions from "expo-permissions";
 import * as MediaLibrary from "expo-media-library";
 import Loader from "../../components/Loader";
+import Layout from "../../constants/Layout";
+import { ScrollView } from "react-native-gesture-handler";
 
 const View = styled.View`
-  justify-content: center;
-  align-items: center;
   flex: 1;
 `;
 
@@ -55,13 +55,24 @@ export default () => {
       {loading ? (
         <Loader />
       ) : hasPermission ? (
-        <View>
-          <Text>thanks!</Text>
+        <>
           <Image
-            style={{ width: 100, height: 100 }}
+            style={{ width: Layout.screen.width, height: Layout.screen.width }}
             source={{ uri: selected.uri }}
           ></Image>
-        </View>
+          <ScrollView contentContainerStyle={{ flexDirection: "row" }}>
+            {allPhotos.map(photo => (
+              <Image
+                key={photo.id}
+                style={{
+                  width: Layout.screen.width / 3,
+                  height: Layout.screen.width / 3
+                }}
+                source={{ uri: photo.uri }}
+              ></Image>
+            ))}
+          </ScrollView>
+        </>
       ) : (
         <Text>So sad:(</Text>
       )}

@@ -31,7 +31,7 @@ const PhotoTabs = () => {
 
 export default function App() {
   return (
-    <Stack.Navigator initialRouteName={"PhotoTabs"} headerMode={"none"}>
+    <Stack.Navigator initialRouteName={"PhotoTabs"} headerMode={"screen"}>
       <Stack.Screen name="PhotoTabs" component={PhotoTabs} />
       <Stack.Screen name="UploadPhoto" component={UploadPhoto} />
     </Stack.Navigator>
