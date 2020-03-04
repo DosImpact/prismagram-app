@@ -11,14 +11,29 @@ import * as MediaLibrary from "expo-media-library";
 import Loader from "../../components/Loader";
 import Layout from "../../constants/Layout";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import theme from "../../styles/theme";
 
 const View = styled.View`
   flex: 1;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: white;
+`;
 
-export default () => {
+const Button = styled.TouchableOpacity`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: ${theme.blueColor};
+  width: 100px;
+  height: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export default ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   const [selected, setSelected] = useState();
@@ -60,6 +75,11 @@ export default () => {
     askPermission();
     return () => {};
   }, []);
+
+  const handleSelected = () => {
+    navigation.navigate("UploadPhoto", { photo: selected });
+  };
+
   return (
     <View>
       {loading ? (
@@ -70,8 +90,14 @@ export default () => {
             style={{ width: Layout.screen.width, height: Layout.screen.width }}
             source={{ uri: selected.uri }}
           ></Image>
+          <Button onPress={handleSelected}>
+            <Text>Select photo</Text>
+          </Button>
           <ScrollView
-            contentContainerStyle={{ flexDirection: "column-reverse" }}
+            contentContainerStyle={{
+              flexDirection: "row",
+              flexWrap: "wrap"
+            }}
           >
             {allPhotos.map(photo => (
               <TouchableOpacity

@@ -47,6 +47,7 @@ export default props => {
         exif: true
       });
       const asset = await MediaLibrary.createAssetAsync(uri);
+      navigate("UploadPhoto", { photo: asset });
     } catch (error) {
       console.error(error);
     } finally {
