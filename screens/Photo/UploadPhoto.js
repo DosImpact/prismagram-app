@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import { Image, ActivityIndicator, Alert } from "react-native";
 import useInput from "../../hooks/useInput";
 import theme from "../../styles/theme";
@@ -7,38 +7,22 @@ import AuthButton from "../../components/AuthButton";
 import styled from "styled-components";
 import axios from "axios";
 
-const View = styled.View`
-  flex: 1;
-`;
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
+import { FEED_QUERY } from "../Main/Home";
 
-const Container = styled.View`
-  padding: 20px;
-  flex-direction: row;
-`;
-
-const Form = styled.View`
-  justify-content: flex-start;
-`;
-
-const STextInput = styled.TextInput`
-  margin-bottom: 10px;
-  border: 0px solid ${theme.lightGreyColor};
-  border-bottom-width: 1px;
-  padding-bottom: 10px;
-  width: ${Layout.window.width - 180}px;
-`;
-
-const Button = styled.TouchableOpacity`
-  background-color: ${props => props.theme.blueColor};
-  padding: 10px;
-  border-radius: 4px;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Text = styled.Text`
-  color: white;
-  font-weight: 600;
+const UPLOAD = gql`
+  mutation upload($caption: String!, $files: [String!]!, $location: String) {
+    upload(caption: $caption, files: $files, location: $location) {
+      id
+      caption
+      location
+      files {
+        id
+        url
+      }
+    }
+  }
 `;
 
 export default ({ navigation, route }) => {
@@ -47,13 +31,18 @@ export default ({ navigation, route }) => {
   } = route;
 
   const [loading, setIsLoading] = useState(false);
-  const [fileUrl, setFileUrl] = useState("");
-  const captionInput = useInput("as");
-  const locationInput = useInput("as");
+  const captionInput = useInput("");
+  const locationInput = useInput("");
+
+  const [UPLOAD_mutation] = useMutation(UPLOAD, {
+    refetchQueries: () => [{ query: FEED_QUERY }]
+  });
+
   const handleSubmit = async () => {
     if (captionInput.value === "" || locationInput.value === "") {
       Alert.alert("All fields are required");
     }
+    //1. 파일업로드 -> S3
 
     const formData = new FormData();
     //console.log("--> filename : ", photo);
@@ -62,18 +51,37 @@ export default ({ navigation, route }) => {
       uri: photo.uri,
       name: photo.filename
     });
-
-    const { data } = await axios.post(
-      "http://10.0.2.2:4000/api/upload",
-      formData,
-      {
-        headers: {
-          "content-type": "multipart/form-data"
+    try {
+      setIsLoading(true);
+      const { data } = await axios.post(
+        "http://10.0.2.2:4000/api/upload",
+        formData,
+        {
+          headers: {
+            "content-type": "multipart/form-data"
+          }
         }
-      }
-    );
-    console.log(data);
-    setFileUrl(data.path);
+      );
+      //2. file경로,caption,location -> GQL
+      // FB) setFileUrl 하고나면 바뀐 변수는 다음 랜더링때 가능!!
+      // setFileUrl 하고 다음 랜더링을 기다리지 말고 -> 바로 보내버리자.
+      console.log("-->data", data);
+      const {
+        data: { upload }
+      } = await UPLOAD_mutation({
+        variables: {
+          caption: captionInput.value,
+          files: [data.location],
+          location: captionInput.value
+        }
+      });
+      console.log("--> upload", upload);
+      navigation.navigate("HomeTab");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <View>
@@ -109,6 +117,41 @@ export default ({ navigation, route }) => {
     </View>
   );
 };
+
+const View = styled.View`
+  flex: 1;
+`;
+
+const Container = styled.View`
+  padding: 20px;
+  flex-direction: row;
+`;
+
+const Form = styled.View`
+  justify-content: flex-start;
+`;
+
+const STextInput = styled.TextInput`
+  margin-bottom: 10px;
+  border: 0px solid ${theme.lightGreyColor};
+  border-bottom-width: 1px;
+  padding-bottom: 10px;
+  width: ${Layout.window.width - 180}px;
+`;
+
+const Button = styled.TouchableOpacity`
+  background-color: ${props => props.theme.blueColor};
+  padding: 10px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Text = styled.Text`
+  color: white;
+  font-weight: 600;
+`;
+
 /**
  * 안드로이드의 파일구조
  filename :  Object {
